@@ -39,10 +39,7 @@
   "resources/bot/config.json",
   "resources/bot/config.py",
   "resources/bot/helpers.py",
-  "resources/bot/reddit.py",
-  "resources/myenv/bin/python3",
-  "resources/myenv/lib/**",
-  "resources/myenv/pyvenv.cfg"
+  "resources/bot/reddit.py"
 ]
 
 
