@@ -1,0 +1,43 @@
+name: Build Windows App
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli
+
+      - name: Install JS dependencies
+        run: npm install
+
+      - name: Create Python venv & install requirements
+        run: |
+          python -m venv src-tauri/resources/myenv
+          src-tauri/resources/myenv/Scripts/pip install -r src-tauri/resources/requirements.txt
+
+      - name: Build Tauri app
+        run: npm run tauri build
+
+      - name: Upload MSI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: redi-windows
+          path: src-tauri/target/release/bundle/msi/
