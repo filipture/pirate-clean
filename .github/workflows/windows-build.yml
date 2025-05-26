@@ -1,4 +1,3 @@
-
 name: Build Windows App
 
 on:
@@ -28,6 +27,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Create Python venv
+        run: |
+          python -m venv src-tauri/resources/myenv
+          src-tauri/resources/myenv/Scripts/pip install -r src-tauri/resources/requirements.txt
+
       - name: Build app
         run: npm run tauri build
 
@@ -36,8 +40,4 @@ jobs:
         with:
           name: redi-windows
           path: src-tauri/target/release/bundle/msi/*.msi
-
-myenv/
-src-tauri/resources/myenv/
-
 
