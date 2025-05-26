@@ -1,0 +1,87 @@
+{
+  "BLOCKED_KEYWORDS": [
+    "nsfw",
+    "18+",
+    "sex",
+    "porn",
+    "naked",
+    "onlyfans",
+    "femboy",
+    "gay",
+    "lgbt",
+    "xxx",
+    "fetish",
+    "bdsm",
+    "hotwife",
+    "gonewild",
+    "bbw",
+    "dick",
+    "cock",
+    "fucker",
+    "f4m",
+    "gun",
+    "weapon",
+    "guns",
+    "fuck",
+    "crossdresser",
+    "dtf",
+    "m4f",
+    "latina",
+    "ass",
+    "t4m",
+    "horny",
+    "telegram",
+    "polish",
+    "bi",
+    "trans"
+  ],
+  "BLOCKED_SUBREDDITS": [
+    "nsfw",
+    "realgirls",
+    "porn",
+    "onlyfansgirls",
+    "gonewild",
+    "asstastic",
+    "polska",
+    "poland",
+    "indie",
+    "india",
+    "anaheimhookup",
+    "modernwarfareiii",
+    "wisconsinmen_gonewild",
+    "eur_irl",
+    "guns",
+    "Firearms"
+  ],
+  "CONFIG": {
+    "ads_power_user_ids": [
+      "adspowerID1",
+      "adspowerID2",
+      "adspowerID3"
+    ],
+    "adspower_api_url": "http://local.adspower.net:50325/api/v1/browser/start",
+    "api_key": "paste your adspower api key here",
+    "comment_probability": 0.34,
+    "comment_prompt_template": "You're replying to a Reddit post titled: \"{title}\". Write a short, friendly, American English comment – maximum 5 words.",
+    "deepseek_api_key": "paste your deepseek api key here",
+    "email": "your email here",
+    "google_sheet": "your google sheet name here",
+    "max_delay": 600,
+    "min_delay": 300,
+    "password": "your password here",
+    "pause_after_comment": [
+      100,
+      210
+    ],
+    "pause_after_post": [
+      23,
+      55
+    ],
+    "scroll_homepage_probability": 0.5
+  },
+  "REDDIT_TO_ADSPOWER": {
+    "redditprofile1": "adspowerID1",
+    "redditprofile2": "adspowerID2",
+    "redditprofile3": "adspowerID3"
+  }
+}

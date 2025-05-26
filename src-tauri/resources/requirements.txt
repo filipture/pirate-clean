@@ -1,0 +1,9 @@
+requests
+gspread
+piexif
+numpy
+pillow
+google-auth
+google-auth-oauthlib
+oauthlib
+playwright

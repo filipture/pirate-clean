@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redi Pirate</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        padding: 2rem;
+        background-color: #f4f4f4;
+        color: #333;
+        max-width: 600px;
+        margin: auto;
+      }
+
+      input, button, textarea {
+        margin: 0.3rem 0;
+        padding: 0.4rem;
+        font-size: 0.95rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      button {
+        cursor: pointer;
+        background: #0066cc;
+        color: white;
+        border: none;
+        border-radius: 4px;
+      }
+
+      button:disabled {
+        background: #aaa;
+        cursor: not-allowed;
+      }
+
+      #log-container {
+        margin-top: 2rem;
+        background: #111;
+        color: #0f0;
+        padding: 1rem;
+        height: 300px;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 12px;
+        font-weight: normal;
+        border-radius: 4px;
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      hr {
+        margin: 1.5rem 0;
+      }
+
+      .collapsible-header {
+        cursor: pointer;
+        user-select: none;
+        background-color: #eaeaea;
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.95rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .collapsible-header::after {
+        content: "\25B6"; /* ▶ */
+        transition: transform 0.2s ease;
+        font-size: 0.9rem;
+        margin-left: 0.5rem;
+      }
+
+      .collapsible-panel.open .collapsible-header::after {
+        transform: rotate(90deg);
+      }
+
+      .collapsible-content {
+        display: none;
+        flex-direction: column;
+        gap: 0.4rem;
+        margin-top: 0.4rem;
+        padding-left: 0.5rem;
+      }
+
+      #add-account-map-btn {
+  background: #28a745; /* zielony */
+  color: white;
+  width: 140px;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.5rem;
+  margin: 0.5rem auto 0 auto;
+  display: block;
+}
+
+
+      .collapsible-panel.open .collapsible-content {
+        display: flex;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+      <img src="pirate_reddit_logo.png" alt="Redi Pirate Logo" style="height: 60px; vertical-align: middle;" />
+      Redi Pirate
+    </h1>
+    
+
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button id="login-btn">🔐 Login & Save Config</button>
+
+    <h2>⚙️ Bot Settings</h2>
+    <hr />
+    <div id="settings-form" style="display: flex; flex-direction: column; gap: 0.5rem;">
+      <div class="collapsible-panel">
+        <h3 class="collapsible-header">🔐 API & Sheet</h3>
+        <div class="collapsible-content">
+          <input type="text" id="config-api-key" placeholder="AdsPower API Key" />
+          <input type="text" id="config-google-sheet" placeholder="Google Sheet Name" />
+        </div>
+      </div>
+
+      <div class="collapsible-panel">
+        <h3 class="collapsible-header">💡 Comment Generation</h3>
+        <div class="collapsible-content">
+          <input type="text" id="config-deepseek-api-key" placeholder="DeepSeek API Key" />
+          <textarea id="config-comment-prompt" placeholder="AI Comment Prompt Template"></textarea>
+          <input type="number" step="0.01" min="0" max="1" id="config-comment-probability" placeholder="Comment Probability (0-1)" />
+        </div>
+      </div>
+
+      <div class="collapsible-panel">
+        <h3 class="collapsible-header">⏳ Behavior & Timing</h3>
+        <div class="collapsible-content">
+          <input type="number" step="0.01" min="0" max="1" id="config-scroll-probability" placeholder="Scroll Homepage Probability (0-1)" />
+          <input type="text" id="config-pause-after-comment" placeholder="Cooldown After Comment (e.g., 100,210)" />
+          <input type="text" id="config-pause-after-post" placeholder="Cooldown After Post (e.g., 23,55)" />
+          <input type="number" id="config-min-delay" placeholder="Minimum Delay (seconds) for next post" />
+          <input type="number" id="config-max-delay" placeholder="Maximum Delay (seconds) for next post" />
+        </div>
+      </div>
+
+      <div class="collapsible-panel">
+        <h3 class="collapsible-header">👥 Account Mapping</h3>
+        <div class="collapsible-content">
+          <table id="account-mapping-table" style="width: 100%; font-size: 0.9rem;">
+            <thead>
+              <tr>
+                <th style="text-align: left;">Reddit Username</th>
+                <th style="text-align: left;">AdsPower ID</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <button type="button" id="add-account-map-btn">➕ Add Mapping</button>
+        </div>
+      </div>
+
+      <button id="load-config-btn">📂 Load Config</button>
+      <button id="save-config-btn">📁 Save Config</button>
+    </div>
+
+    <hr />
+
+    <div style="display: flex; gap: 0.5rem;">
+      <button id="start-bot" style="flex: 1; display: flex; justify-content: center; align-items: center;" disabled>
+        ▶️ Start Bot
+      </button>
+      <button id="pause-bot" style="flex: 0.5; display: flex; justify-content: center; align-items: center;" disabled>
+        ⏸️ Pause
+      </button>
+    </div>
+
+    <div id="log-container">
+      <pre id="log-output"></pre>
+    </div>
+
+    <script type="module">
+      import { invoke } from "@tauri-apps/api/core";
+
+      document.getElementById("load-config-btn").addEventListener("click", async () => {
+        const cfg = await invoke("get_config");
+        document.getElementById("email").value = cfg.email || "";
+        document.getElementById("password").value = cfg.password || "";
+        document.getElementById("config-api-key").value = cfg.api_key || "";
+        document.getElementById("config-google-sheet").value = cfg.google_sheet || "";
+        document.getElementById("config-deepseek-api-key").value = cfg.deepseek_api_key || "";
+        document.getElementById("config-comment-prompt").value = cfg.comment_prompt_template || "";
+        document.getElementById("config-comment-probability").value = cfg.comment_probability;
+        document.getElementById("config-scroll-probability").value = cfg.scroll_homepage_probability;
+        document.getElementById("config-pause-after-comment").value = cfg.pause_after_comment.join(",");
+        document.getElementById("config-pause-after-post").value = cfg.pause_after_post.join(",");
+        document.getElementById("config-min-delay").value = cfg.min_delay;
+        document.getElementById("config-max-delay").value = cfg.max_delay;
+        console.log("Loaded config:", cfg);
+        renderAccountMappings(cfg.REDDIT_TO_ADSPOWER || {});
+      });
+
+      document.getElementById("save-config-btn").addEventListener("click", async () => {
+        const accountData = extractAccountMappings();
+        await invoke("update_config", {
+          config: {
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value,
+            api_key: document.getElementById("config-api-key").value,
+            google_sheet: document.getElementById("config-google-sheet").value,
+            deepseek_api_key: document.getElementById("config-deepseek-api-key").value,
+            comment_prompt_template: document.getElementById("config-comment-prompt").value,
+            comment_probability: parseFloat(document.getElementById("config-comment-probability").value),
+            scroll_homepage_probability: parseFloat(document.getElementById("config-scroll-probability").value),
+            pause_after_comment: document.getElementById("config-pause-after-comment").value.split(",").map(Number),
+            pause_after_post: document.getElementById("config-pause-after-post").value.split(",").map(Number),
+            min_delay: parseInt(document.getElementById("config-min-delay").value),
+            max_delay: parseInt(document.getElementById("config-max-delay").value),
+            ...accountData
+          }
+        });
+        alert("✅ Config saved!");
+      });
+
+      function renderAccountMappings(map) {
+        const table = document.querySelector("#account-mapping-table tbody");
+        table.innerHTML = "";
+        Object.entries(map).forEach(([reddit, adspower]) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td><input type="text" value="${reddit}" class="reddit-name" /></td>
+            <td><input type="text" value="${adspower}" class="adspower-id" /></td>
+            <td><button type="button" class="remove-row-btn">❌</button></td>
+          `;
+          table.appendChild(row);
+        });
+        attachRemoveHandlers();
+      }
+
+      function attachRemoveHandlers() {
+        document.querySelectorAll(".remove-row-btn").forEach(btn => {
+          btn.onclick = () => btn.closest("tr").remove();
+        });
+      }
+
+      document.getElementById("add-account-map-btn").addEventListener("click", () => {
+        const table = document.querySelector("#account-mapping-table tbody");
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td><input type="text" class="reddit-name" /></td>
+          <td><input type="text" class="adspower-id" /></td>
+          <td><button type="button" class="remove-row-btn">❌</button></td>
+        `;
+        table.appendChild(row);
+        attachRemoveHandlers();
+      });
+
+      function extractAccountMappings() {
+        const map = {};
+        const ids = new Set();
+        document.querySelectorAll("#account-mapping-table tbody tr").forEach(row => {
+          const reddit = row.querySelector(".reddit-name").value.trim();
+          const adspower = row.querySelector(".adspower-id").value.trim();
+          if (reddit && adspower) {
+            map[reddit] = adspower;
+            ids.add(adspower);
+          }
+        });
+        return {
+          REDDIT_TO_ADSPOWER: map,
+          ads_power_user_ids: Array.from(ids)
+        };
+      }
+    </script>
+
+    <script>
+      document.querySelectorAll(".collapsible-header").forEach(header => {
+        header.addEventListener("click", () => {
+          header.parentElement.classList.toggle("open");
+        });
+      });
+    </script>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

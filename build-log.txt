@@ -1,0 +1,44 @@
+
+> redi@0.1.0 tauri
+> tauri build
+
+     Running beforeBuildCommand `npm run build`
+
+> redi@0.1.0 build
+> tsc && vite build
+
+vite v6.3.5 building for production...
+transforming...
+✓ 8 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                  5.98 kB │ gzip: 1.86 kB
+dist/assets/pirate_reddit_logo-DNGuDUaD.png  1,046.79 kB
+dist/assets/index-DlCYB3XD.js                    6.24 kB │ gzip: 2.16 kB
+✓ built in 78ms
+   Compiling objc2-web-kit v0.3.1
+   Compiling tao v0.33.0
+   Compiling muda v0.16.1
+   Compiling window-vibrancy v0.6.0
+   Compiling redi v0.1.0 (/Users/filipturek/redi/src-tauri)
+error: failed to run custom build command for `redi v0.1.0 (/Users/filipturek/redi/src-tauri)`
+
+Caused by:
+  process didn't exit successfully: `/Users/filipturek/redi/src-tauri/target/release/build/redi-dfea27085608bda5/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rerun-if-env-changed=TAURI_CONFIG
+  cargo:rustc-check-cfg=cfg(desktop)
+  cargo:rustc-cfg=desktop
+  cargo:rustc-check-cfg=cfg(mobile)
+  cargo:rerun-if-changed=/Users/filipturek/redi/src-tauri/tauri.conf.json
+  cargo:rustc-env=TAURI_ANDROID_PACKAGE_NAME_APP_NAME=app
+  cargo:rustc-env=TAURI_ANDROID_PACKAGE_NAME_PREFIX=com_redi
+  cargo:rustc-check-cfg=cfg(dev)
+  cargo:PERMISSION_FILES_PATH=/Users/filipturek/redi/src-tauri/target/release/build/redi-b53aa267fa4bedb6/out/app-manifest/__app__-permission-files
+  cargo:rerun-if-changed=capabilities
+  cargo:rerun-if-env-changed=REMOVE_UNUSED_COMMANDS
+  cargo:rustc-env=TAURI_ENV_TARGET_TRIPLE=aarch64-apple-darwin
+  resource path `../dist/main` doesn't exist
+warning: build failed, waiting for other jobs to finish...
+failed to build app: failed to build app
+       Error failed to build app: failed to build app
